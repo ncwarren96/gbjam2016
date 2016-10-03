@@ -35,8 +35,6 @@ function init(){
 	//var text = new createjs.Text(ball.x, "20px Arial", "#ff7700");
 	//text.x = 10;	
 	
-	index.document.onkeydown = keyPressed;
-	
 	//Ticker
 	createjs.Ticker.on("tick", game_loop);
 	createjs.Ticker.setFPS(30);
@@ -81,6 +79,7 @@ function update(){
  	
 }
 
+//*****************BROKEN*********
 function keyPressed(event){
 	switch(event.keyCode){
 		case 37:
