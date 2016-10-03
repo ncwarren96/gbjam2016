@@ -8,6 +8,11 @@ var HEIGHT = 144;
 
 var stage;
 var ball, speedX, speedY, accelX, accelY, power;
+var dirVect = {
+	x: 0,
+	y: 0
+};
+var ballIsStop = true;
 var dt = 1/30.0;
 
 document.onkeydown = keyPressed;
@@ -36,7 +41,7 @@ function init(){
 	
 	speedX = 0;
 	speedY = 0;
-	power = 0;
+	power = 10;
 	
 	//var text = new createjs.Text(ball.x, "20px Arial", "#ff7700");
 	//text.x = 10;	
@@ -51,32 +56,31 @@ function game_loop(event) {
 	draw();
 }
 function update(){
+	//move ball
 	ball.x += speedX;
 	ball.y += speedY;
-	
-	//arrow.rotation++;
+
 	//friction
-	speedX = speedX*.95;
-	speedY = speedY*.95;
-	
+	speedX = speedX*.97;
+	speedY = speedY*.97;
+	if(Math.abs(speedX)<0.1 && Math.abs(speedY)<0.1){
+		speedX = 0;
+		speedY = 0;
+		ballIsStop = true;
+	}
 	//wall collison
-	if(ball.y>150 || ball.y<0){
+	if(ball.y>HEIGHT-10 || ball.y<3){
 		speedY = -speedY;
 	}
-	if(ball.x>WIDTH || ball.x<0){
+	if(ball.x>WIDTH-6 || ball.x<6){
 		speedX = -speedX;
 	}
 	
+	if(ballIsStop){
+		arrow.x = ball.x;
+		arrow.y = ball.y;
+	}
 	
-	var inc = true;
-	if(power>100){
-		inc = !inc;
-	}
-	if(inc){
-		power++;
-	}else{
-		power--;
-	}
 	
 	stage.update(event);
 }
@@ -85,10 +89,8 @@ function update(){
  	
 }
 
-//*****************BROKEN*********
 function keyPressed(event){
 	console.log("key pressed\n");
-	console.log(arrow.rotation);
 	switch(event.keyCode){
 		case 37:
 			arrow.rotation += 5;
@@ -97,15 +99,26 @@ function keyPressed(event){
 			arrow.rotation-=5;
 			break;
 		case 32:
-			//hit ball
+			hitBall(arrow.rotation);
 			break;
 	}
 	stage.update();
 }
 
-
-
-
+function hitBall(degrees){
+	ballIsStop = false;
+	var radians = degrees * (Math.PI/180);
+	dirVect.x = -Math.sin(radians);
+	dirVect.y = Math.cos(radians);
+	
+	speedX = power * dirVect.x;
+	speedY = power * dirVect.y;
+	
+	//arrow.x = ball.x;
+	//arrow.y = ball.y;
+	
+	console.log(radians);
+}
 
 
 
