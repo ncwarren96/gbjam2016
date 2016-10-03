@@ -1,7 +1,7 @@
 //Canvas stuff
 	var canvas = document.getElementsByTagName('canvas');
-	var ctx = canvas.getContext("2d");
-	ctx.imageSmoothingEnabled = false;
+	//var ctx = canvas.getContext("2d");
+	//ctx.imageSmoothingEnabled = false;
 
 var WIDTH = 160;
 var HEIGHT = 144;
@@ -9,6 +9,12 @@ var HEIGHT = 144;
 var stage;
 var ball, speedX, speedY, accelX, accelY, power;
 var dt = 1/30.0;
+
+document.onkeydown = keyPressed;
+
+var arrow;
+var ball;
+
 function init(){
 
 	console.log("init");
@@ -81,12 +87,14 @@ function update(){
 
 //*****************BROKEN*********
 function keyPressed(event){
+	console.log("key pressed\n");
+	console.log(arrow.rotation);
 	switch(event.keyCode){
 		case 37:
-			arrow.rotation++;
+			arrow.rotation += 5;
 			break;
 		case 39:
-			arrow.rotation--;
+			arrow.rotation-=5;
 			break;
 		case 32:
 			//hit ball
