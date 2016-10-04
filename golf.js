@@ -13,12 +13,17 @@ var dirVect = {
 	y: 0
 };
 var ballIsStop = true;
+
+//Ball state 0=stopped, 1=charging, 2=hit/moving
+var ballState = 0;
 var dt = 1/30.0;
 
 document.onkeydown = keyPressed;
 
 var arrow;
 var ball;
+var i = 0;
+var inc = true;
 
 function init(){
 
@@ -63,11 +68,18 @@ function update(){
 	//friction
 	speedX = speedX*.97;
 	speedY = speedY*.97;
+	
+	//Stop ball
 	if(Math.abs(speedX)<0.1 && Math.abs(speedY)<0.1){
 		speedX = 0;
 		speedY = 0;
 		ballIsStop = true;
 	}
+	if(ballIsStop){
+		arrow.x = ball.x;
+		arrow.y = ball.y;
+	}
+	
 	//wall collison
 	if(ball.y>HEIGHT-10 || ball.y<3){
 		speedY = -speedY;
@@ -76,16 +88,14 @@ function update(){
 		speedX = -speedX;
 	}
 	
-	if(ballIsStop){
-		arrow.x = ball.x;
-		arrow.y = ball.y;
-	}
-	
-	
+	//power bar
+	if(i>=100 || i<0) inc = !inc;
+	i = powerBar(i);
+	console.log(i);
 	stage.update(event);
 }
 
- function draw(){
+function draw(){
  	
 }
 
@@ -99,13 +109,14 @@ function keyPressed(event){
 			arrow.rotation-=5;
 			break;
 		case 32:
-			hitBall(arrow.rotation);
+			//change ball state to charging, then hit
+			hitBall(arrow.rotation, i/10);
 			break;
 	}
 	stage.update();
 }
 
-function hitBall(degrees){
+function hitBall(degrees, power){
 	ballIsStop = false;
 	var radians = degrees * (Math.PI/180);
 	dirVect.x = -Math.sin(radians);
@@ -120,8 +131,14 @@ function hitBall(degrees){
 	console.log(radians);
 }
 
-
-
+function powerBar(i){
+		if(inc){
+			i++;
+		}else{
+			i--;
+		}
+	return i;
+}
 
 
 
