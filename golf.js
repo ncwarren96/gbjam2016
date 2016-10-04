@@ -74,8 +74,9 @@ function update(){
 		speedX = 0;
 		speedY = 0;
 		ballIsStop = true;
+		//ballState = 0;
 	}
-	if(ballIsStop){
+	if(ballState == 0){
 		arrow.x = ball.x;
 		arrow.y = ball.y;
 	}
@@ -89,8 +90,13 @@ function update(){
 	}
 	
 	//power bar
-	if(i>=100 || i<0) inc = !inc;
-	i = powerBar(i);
+	if(ballState == 1){
+		if(i>=100 || i<0) inc = !inc;
+		i = powerBar(i);
+	}
+	if(ballState == 2){
+		hitBall(arrow.rotation, i/10);
+	}
 	console.log(i);
 	stage.update(event);
 }
@@ -109,15 +115,16 @@ function keyPressed(event){
 			arrow.rotation-=5;
 			break;
 		case 32:
+			console.log("SPACE PRESSED");
+			ballState++;
 			//change ball state to charging, then hit
-			hitBall(arrow.rotation, i/10);
 			break;
 	}
 	stage.update();
 }
 
 function hitBall(degrees, power){
-	ballIsStop = false;
+	ballState = 0;
 	var radians = degrees * (Math.PI/180);
 	dirVect.x = -Math.sin(radians);
 	dirVect.y = Math.cos(radians);
