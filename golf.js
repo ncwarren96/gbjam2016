@@ -23,6 +23,8 @@ document.onkeydown = keyPressed;
 var arrow;
 var ball;
 var background;
+var powerMeter;
+
 var i = 0;
 var inc = true;
 
@@ -52,6 +54,16 @@ function init(){
 	arrow.y = ball.x;
 	
 	stage.addChild(arrow);
+	
+	var data = {
+		images: ["./GolfPowerBar.png"],
+		frames: {width: 11, height: 42, count: 41}
+	};
+
+	powerMeter = new createjs.Sprite(new createjs.SpriteSheet(data));
+	powerMeter.x = 3;
+	powerMeter.y = 100;
+	stage.addChild(powerMeter);
 	
 	speedX = 0;
 	speedY = 0;
@@ -87,7 +99,7 @@ function update(){
 	}
 	if(ballState == 0){
 		arrow.x = ball.x+2;
-		arrow.y = ball.y+2;
+		arrow.y = ball.y+1.5;
 		i = 0;
 	}
 	
@@ -122,12 +134,12 @@ function keyPressed(event){
 	switch(event.keyCode){
 		case 37:
 			if(ballState == 0){
-				arrow.rotation += 5;
+				arrow.rotation -= 5;
 			}
 			break;
 		case 39:
 			if(ballState == 0){
-				arrow.rotation-=5;
+				arrow.rotation+=5;
 			}
 			break;
 		case 32:
@@ -164,9 +176,11 @@ function hitBall(degrees, power){
 function powerBar(i){
 		if(inc){
 			i++;
+			
 		}else{
 			i--;
 		}
+		powerMeter.gotoAndStop(Math.round((40/100)*i));
 	return i;
 }
 
