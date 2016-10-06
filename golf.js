@@ -7,6 +7,7 @@ var WIDTH = 160;
 var HEIGHT = 144;
 
 var stage;
+var obst, obstImg
 var ball, speedX, speedY, accelX, accelY, power;
 var dirVect = {
 	x: 0,
@@ -48,6 +49,14 @@ function init(){
 	ball.y = 20;
 	stage.addChild(ball);
 	
+	//Test obstacle
+	//obstImg = new Image();
+	//img.src = ;
+	obst = new createjs.Bitmap("./test_obstacle.png")
+	obst.x = 40;
+	obst.y = 40;
+	stage.addChild(obst);
+	
 	arrow = new createjs.Shape();
 	arrow.graphics.beginFill("black").drawRect(0, 0, 1, 20);
 	arrow.x = ball.y;
@@ -81,14 +90,9 @@ function game_loop(event) {
 	update();
 	draw();
 }
-function update(){
+function update(){	
+	//console.log(ballState+": "+speedX+", "+speedY+": "+i);
 	
-
-	//friction
-	speedX = speedX*.97;
-	speedY = speedY*.97;
-	
-	console.log(ballState+": "+speedX+", "+speedY+": "+i);
 	
 	//Stop ball
 	if(Math.abs(speedX)<0.1 && Math.abs(speedY)<0.1 && !ballIsStop){
@@ -110,7 +114,11 @@ function update(){
 	if(ball.x>WIDTH-5 || ball.x<18){
 		speedX = -speedX;
 	}
-	
+	console.log(obst.getBounds())
+	var pt = obst.globalToLocal(ball.x, ball.y);
+	if(obst.hitTest(pt.x, pt.y)){
+			speedX = -speedX;
+	}
 	//power bar
 	if(ballState == 1 && ballIsStop){
 		if(i>=100 || i<0) inc = !inc;
@@ -122,6 +130,9 @@ function update(){
 	//move ball
 	ball.x += speedX;
 	ball.y += speedY;
+	//friction
+	speedX = speedX*.97;
+	speedY = speedY*.97;
 	stage.update(event);
 }
 
@@ -160,11 +171,9 @@ function hitBall(degrees, power){
 	ballIsStop = false;
 	//ballState = 0;
 	var radians = degrees * (Math.PI/180);
-	dirVect.x = -Math.sin(radians);
-	dirVect.y = Math.cos(radians);
 	
-	speedX = power * dirVect.x;
-	speedY = power * dirVect.y;
+	speedX = power * -Math.sin(radians);
+	speedY = power * Math.cos(radians);
 	
 	//arrow.x = ball.x;
 	//arrow.y = ball.y;
@@ -175,10 +184,9 @@ function hitBall(degrees, power){
 
 function powerBar(i){
 		if(inc){
-			i++;
-			
+			i+=2;
 		}else{
-			i--;
+			i-=2;
 		}
 		powerMeter.gotoAndStop(Math.round((40/100)*i));
 	return i;
