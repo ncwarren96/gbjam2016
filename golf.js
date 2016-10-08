@@ -100,6 +100,7 @@ function update(){
 		speedY = 0;
 		ballIsStop = true;
 		ballState = 0;
+		powerMeter.gotoAndStop(0);
 	}
 	if(ballState == 0){
 		arrow.x = ball.x+2;
