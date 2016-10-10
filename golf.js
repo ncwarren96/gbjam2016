@@ -115,10 +115,24 @@ function update(){
 	if(ball.x>WIDTH-5 || ball.x<18){
 		speedX = -speedX;
 	}
-	console.log(obst.getBounds())
+	//console.log(obst.getBounds())
 	var pt = obst.globalToLocal(ball.x, ball.y);
-	if(obst.hitTest(pt.x, pt.y)){
+	var mp = obst.globalToLocal(stage.mouseX, stage.mouseY);
+	//console.log(obst.hitTest(pt.x, pt.y));
+	//console.log(ball.x+", "+obst.x)
+	if(obst.hitTest(pt.x, pt.y) && ball.x < obst.x && (ball.y > obst.y || ball.y < obst.y+32)){
+			console.log("horizontal");
 			speedX = -speedX;
+			//speedY = -speedY;
+	}
+	if(obst.hitTest(pt.x, pt.y) && ball.x > obst.x && (ball.y > obst.y || ball.y < obst.y+32)){
+		console.log("right horizontal");
+		speedX = -speedX;
+	}
+	if(obst.hitTest(pt.x, pt.y) && (ball.y<obst.y || ball.y>obst.y) && (ball.x < obst.x || ball.x > obst.x+32)){
+			console.log("vertical");
+			speedY = -speedY;
+			//speedX = -speedX;
 	}
 	//power bar
 	if(ballState == 1 && ballIsStop){
@@ -180,7 +194,7 @@ function hitBall(degrees, power){
 	//arrow.y = ball.y;
 	
 	//console.log(radians);
-	console.log(speedX+", "+speedY);
+	//console.log(speedX+", "+speedY);
 }
 
 function powerBar(i){
